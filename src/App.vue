@@ -1,24 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <PostsTable v-if="items.length>0" :items="items"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from "axios";
+import PostsTable from './components/PostsTable.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    PostsTable
+  },
+  data() {
+    return {
+      items : []
+    }
+  },
+  async mounted() {
+    try {
+      const response = await axios.get(
+        `https://jsonplaceholder.typicode.com/comments`
+      );
+      this.items = response.data;
+    } catch (error) {
+      this.items = [];
+    }
+  },
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
